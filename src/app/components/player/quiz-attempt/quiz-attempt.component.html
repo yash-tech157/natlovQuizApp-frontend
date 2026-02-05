@@ -21,6 +21,10 @@
     </mat-card-header>
 
     <mat-card-content>
+      <div class="timer">
+  Time Left: {{ timeLeft }}s
+</div>
+
       <p class="question-text">
         {{ questions[currentStep]?.questionText }}
       </p>
@@ -53,8 +57,7 @@
         {{ currentStep === questions.length - 1 ? 'Submit Quiz' : 'Next Question' }}
       </button>
     </mat-card-actions> -->
-
-    <mat-card-actions class="action-buttons">
+<mat-card-actions class="action-buttons">
 
   <!-- PREVIOUS BUTTON -->
   <button
@@ -76,6 +79,7 @@
 
 </mat-card-actions>
 
+    
   </mat-card>
 
   <!-- RESULT STATE -->

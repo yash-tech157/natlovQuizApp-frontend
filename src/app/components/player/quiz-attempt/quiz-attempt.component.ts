@@ -30,6 +30,11 @@ export class QuizAttemptComponent implements OnInit {
   totalScore = 0;
   isLoading = true;
 
+  timePerQuestion = 30; // seconds
+timeLeft = this.timePerQuestion;
+timerInterval: any;
+
+
   constructor(
     private route: ActivatedRoute,
     private quizService: QuizService,
@@ -49,6 +54,7 @@ export class QuizAttemptComponent implements OnInit {
       next: (data: Question[]) => {
         this.questions = data;
         this.isLoading = false;
+        this.startTimer();
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -58,6 +64,43 @@ export class QuizAttemptComponent implements OnInit {
       }
     });
   }
+startTimer(): void {
+  this.clearTimer();
+  this.timeLeft = this.timePerQuestion;
+
+  this.timerInterval = setInterval(() => {
+    this.timeLeft--;
+
+    // 🔥 FORCE UI UPDATE
+    this.cdr.detectChanges();
+
+    if (this.timeLeft === 0) {
+      this.onTimeUp();
+    }
+  }, 1000);
+}
+
+
+clearTimer(): void {
+  if (this.timerInterval) {
+    clearInterval(this.timerInterval);
+    this.timerInterval = null;
+  }
+}
+
+onTimeUp(): void {
+  // save current answer or empty
+  this.userAnswers[this.currentStep] = this.selectedOption || '';
+
+  if (this.currentStep < this.questions.length - 1) {
+    this.currentStep++;
+    this.selectedOption = this.userAnswers[this.currentStep] || null;
+    this.startTimer();
+  } else {
+    this.submitQuiz();
+  }
+}
+
 
   // 👉 NEXT BUTTON
   next(): void {
@@ -70,6 +113,7 @@ export class QuizAttemptComponent implements OnInit {
       this.currentStep++;
       // ✅ restore previous answer if exists
       this.selectedOption = this.userAnswers[this.currentStep] || null;
+      this.startTimer();
     } else {
       this.submitQuiz();
     }
@@ -80,18 +124,22 @@ export class QuizAttemptComponent implements OnInit {
     if (this.currentStep > 0) {
       this.currentStep--;
       this.selectedOption = this.userAnswers[this.currentStep] || null;
+      this.startTimer();
     }
   }
 
-  submitQuiz(): void {
-    const userId = 1; // temporary
-    this.quizService.submitAnswers(this.quizId, userId, this.userAnswers)
-      .subscribe({
-        next: (res) => {
-          this.totalScore = res.score;
-          this.isFinished = true;
-        },
-        error: (err) => console.error('Submission failed', err)
-      });
-  }
+ submitQuiz(): void {
+  this.clearTimer(); // ⛔ STOP TIMER
+
+  const userId = 1;
+  this.quizService.submitAnswers(this.quizId, userId, this.userAnswers)
+    .subscribe({
+      next: (res) => {
+        this.totalScore = res.score;
+        this.isFinished = true;
+      },
+      error: (err) => console.error('Submission failed', err)
+    });
+}
+
 }
