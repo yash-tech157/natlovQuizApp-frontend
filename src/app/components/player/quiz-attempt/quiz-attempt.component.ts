@@ -23,14 +23,14 @@ export class QuizAttemptComponent implements OnInit {
   currentStep = 0;
   selectedOption: string | null = null;
 
-  // ✅ store answers by index
+
   userAnswers: string[] = [];
 
   isFinished = false;
   totalScore = 0;
   isLoading = true;
 
-  timePerQuestion = 30; // seconds
+  timePerQuestion = 30; 
 timeLeft = this.timePerQuestion;
 timerInterval: any;
 
@@ -71,7 +71,6 @@ startTimer(): void {
   this.timerInterval = setInterval(() => {
     this.timeLeft--;
 
-    // 🔥 FORCE UI UPDATE
     this.cdr.detectChanges();
 
     if (this.timeLeft === 0) {
@@ -89,7 +88,6 @@ clearTimer(): void {
 }
 
 onTimeUp(): void {
-  // save current answer or empty
   this.userAnswers[this.currentStep] = this.selectedOption || '';
 
   if (this.currentStep < this.questions.length - 1) {
@@ -102,16 +100,14 @@ onTimeUp(): void {
 }
 
 
-  // 👉 NEXT BUTTON
+  
   next(): void {
     if (!this.selectedOption) return;
 
-    // ✅ save answer for current question
     this.userAnswers[this.currentStep] = this.selectedOption;
 
     if (this.currentStep < this.questions.length - 1) {
       this.currentStep++;
-      // ✅ restore previous answer if exists
       this.selectedOption = this.userAnswers[this.currentStep] || null;
       this.startTimer();
     } else {
@@ -129,7 +125,7 @@ onTimeUp(): void {
   }
 
  submitQuiz(): void {
-  this.clearTimer(); // ⛔ STOP TIMER
+  this.clearTimer(); // STOP TIMER
 
   const userId = 1;
   this.quizService.submitAnswers(this.quizId, userId, this.userAnswers)

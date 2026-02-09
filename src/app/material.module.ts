@@ -9,9 +9,6 @@ import { MatListModule } from '@angular/material/list';
 import { MatRadioModule } from '@angular/material/radio'; 
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core'; 
-
-
-// --- ADD THESE THREE FOR DIALOGS AND PROGRESS ---
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -28,7 +25,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatRadioModule,
     MatSelectModule,
     MatOptionModule,
-    // --- EXPORT THEM HERE ---
     MatDialogModule,
     MatProgressBarModule,
     MatSnackBarModule

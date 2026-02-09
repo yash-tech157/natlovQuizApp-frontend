@@ -21,17 +21,17 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadQuizzes();
-  }
+  this.loadQuizzes(); // This calls the QuizService
+}
 
-  loadQuizzes(): void {
-    this.quizService.getQuizzes().subscribe({
-      next: (data) => {
-        this.quizzes = data;
-      },
-      error: (err) => console.error('Error loading quizzes', err),
-    });
-  }
+loadQuizzes(): void {
+  this.quizService.getQuizzes().subscribe({
+    next: (data) => {
+      this.quizzes = data; // Updates the total count in HTML
+    },
+    error: (err) => console.error('Error loading quizzes', err)
+  });
+}
 
   // ✅ CREATE / EDIT HANDLING FIXED HERE
   openQuizEditor(quiz?: Quiz): void {

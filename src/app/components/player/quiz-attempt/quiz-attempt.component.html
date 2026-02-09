@@ -14,38 +14,43 @@
       [value]="((currentStep + 1) / questions.length) * 100">
     </mat-progress-bar>
 
-    <mat-card-header>
-      <mat-card-title>
-        Question {{ currentStep + 1 }} of {{ questions.length }}
-      </mat-card-title>
-    </mat-card-header>
+   <mat-card-header class="question-header">
+  <mat-card-title>
+    Question {{ currentStep + 1 }} of {{ questions.length }}
+  </mat-card-title>
+
+  <span class="timer-badge">
+  Time Left: ⏱ {{ timeLeft }}s
+  </span>
+</mat-card-header>
 
     <mat-card-content>
-      <div class="timer">
+      <!-- <div class="timer">
   Time Left: {{ timeLeft }}s
-</div>
+</div> -->
 
       <p class="question-text">
         {{ questions[currentStep]?.questionText }}
       </p>
 
-      <mat-radio-group [(ngModel)]="selectedOption">
-        <mat-radio-button [value]="questions[currentStep]?.optionA">
-          {{ questions[currentStep]?.optionA }}
-        </mat-radio-button>
+     <mat-radio-group
+  class="options-group"
+  [(ngModel)]="selectedOption">
 
-        <mat-radio-button [value]="questions[currentStep]?.optionB">
-          {{ questions[currentStep]?.optionB }}
-        </mat-radio-button>
+  <mat-radio-button
+    class="option-card"
+    *ngFor="let opt of [
+      questions[currentStep]?.optionA,
+      questions[currentStep]?.optionB,
+      questions[currentStep]?.optionC,
+      questions[currentStep]?.optionD
+    ]"
+    [value]="opt">
+    {{ opt }}
+  </mat-radio-button>
 
-        <mat-radio-button [value]="questions[currentStep]?.optionC">
-          {{ questions[currentStep]?.optionC }}
-        </mat-radio-button>
+</mat-radio-group>
 
-        <mat-radio-button [value]="questions[currentStep]?.optionD">
-          {{ questions[currentStep]?.optionD }}
-        </mat-radio-button>
-      </mat-radio-group>
     </mat-card-content>
 
     <!-- <mat-card-actions>
