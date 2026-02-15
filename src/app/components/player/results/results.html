@@ -1,1 +1,40 @@
-<p>results works!</p>
+<div class="results-container">
+  <mat-card class="score-card" *ngIf="resultData">
+    <mat-card-header>
+      <mat-card-title>Quiz Completed!</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <h1 class="display-score">Your Score: {{ resultData.score }}</h1>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-flat-button color="primary" routerLink="/player/quizzes">Try Another Quiz</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="leaderboard-card">
+    <mat-card-header>
+      <mat-card-title>Global Leaderboard</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Player Name</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let entry of leaderboard; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ entry.user?.name || 'Anonymous' }}</td>
+            <td>{{ entry.score }}</td>
+          </tr>
+          <tr *ngIf="leaderboard.length === 0">
+            <td colspan="3" style="text-align: center;">No results found yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

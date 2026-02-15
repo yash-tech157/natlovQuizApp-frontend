@@ -115,7 +115,6 @@ onTimeUp(): void {
     }
   }
 
-  // 👉 PREVIOUS BUTTON
   previous(): void {
     if (this.currentStep > 0) {
       this.currentStep--;
@@ -125,10 +124,11 @@ onTimeUp(): void {
   }
 
  submitQuiz(): void {
-  this.clearTimer(); // STOP TIMER
+  this.clearTimer(); 
 
   const userId = 1;
-  this.quizService.submitAnswers(this.quizId, userId, this.userAnswers)
+this.quizService.submitAnswers(this.quizId, this.userAnswers)
+
     .subscribe({
       next: (res) => {
         this.totalScore = res.score;

@@ -32,36 +32,39 @@ loadQuizzes(): void {
     error: (err) => console.error('Error loading quizzes', err)
   });
 }
-
-  // ✅ CREATE / EDIT HANDLING FIXED HERE
-  openQuizEditor(quiz?: Quiz): void {
-    const dialogRef = this.dialog.open(QuizEditorComponent, {
-      width: '600px',
-      data: quiz ? { ...quiz } : null,
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-  if (!result) return;
-
-  // ONLY CREATE (no edit yet)
-  delete result.id;
-
-  this.quizService.createQuiz(result).subscribe({
-    next: () => this.loadQuizzes(),
-    error: (err: any) => console.error('Error creating quiz', err),
+openQuizEditor(quiz?: Quiz): void {
+  const dialogRef = this.dialog.open(QuizEditorComponent, {
+    width: '600px',
+    data: quiz ? { ...quiz } : null, // Pass a copy of the quiz to edit
   });
-});
-  }
 
-  deleteQuiz(id: number): void {
-    const confirmed = confirm('Are you sure you want to delete this quiz?');
-    if (!confirmed) return;
+  dialogRef.afterClosed().subscribe((result) => {
+    if (!result) return;
 
+    if (quiz && quiz.id) {
+      // FIX: If we have an ID, call UPDATE
+      this.quizService.updateQuiz(quiz.id, result).subscribe({
+        next: () => this.loadQuizzes(),
+        error: (err) => console.error('Error updating quiz', err),
+      });
+    } else {
+      // FIX: If no ID, call CREATE
+      this.quizService.createQuiz(result).subscribe({
+        next: () => this.loadQuizzes(),
+        error: (err) => console.error('Error creating quiz', err),
+      });
+    }
+  });
+}
+deleteQuiz(id: number): void {
+  if (confirm('Are you sure you want to delete this quiz?')) {
     this.quizService.deleteQuiz(id).subscribe({
       next: () => {
+        // Remove the deleted quiz from the local array to update the UI
         this.quizzes = this.quizzes.filter(q => q.id !== id);
       },
-      error: (err) => console.error('Error deleting quiz', err),
+      error: (err) => console.error('Delete failed', err)
     });
   }
+}
 }

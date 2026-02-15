@@ -18,7 +18,7 @@ export class QuizListComponent implements OnInit {
 
   ngOnInit() {
     this.quizService.getQuizzes().subscribe((res: any) => {
-      this.quizzes = res; // This fills the screen with real quizzes
+      this.quizzes = res; //  fills the screen with real quizzes
     });
   }
 }

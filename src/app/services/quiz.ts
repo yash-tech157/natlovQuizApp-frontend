@@ -1,19 +1,13 @@
-// Define this at the top of your quiz.ts file
-
-import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-const httpOptions = {
-  withCredentials: true
-};
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export interface Quiz {
   id: number;
   title: string;
   description: string;
   questionsCount: number;
+  questionsList?: Question[];
 }
 
 export interface Question {
@@ -25,60 +19,56 @@ export interface Question {
   optionD: string;
   correctAnswer?: string;
 }
+
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class QuizService {
+
   private baseUrl = 'http://localhost:8080/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // Fetch all quizzes
-getQuizzes(): Observable<Quiz[]> {
- return this.http.get<Quiz[]>(`${this.baseUrl}/quizzes`, httpOptions);
+  getQuizzes(): Observable<Quiz[]> {
+    return this.http.get<Quiz[]>(`${this.baseUrl}/quizzes`);
   }
 
-  // Create a new quiz
- createQuiz(quiz: any): Observable<Quiz> {
-    return this.http.post<Quiz>(`${this.baseUrl}/quizzes`, quiz, httpOptions).pipe(
-      catchError(this.handleError)
-    );
+  // Create quiz
+  createQuiz(quiz: any): Observable<Quiz> {
+    return this.http.post<Quiz>(`${this.baseUrl}/quizzes`, quiz);
   }
 
-  // Delete a quiz
- deleteQuiz(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/quizzes/${id}`, httpOptions).pipe(
-      catchError(this.handleError)
-    );
+  // Delete quiz
+  deleteQuiz(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/quizzes/${id}`);
   }
 
-  // Fetch questions for a specific quiz
-// getQuestionsByQuiz(quizId: number): Observable<any[]> {
-//     return this.http.get<any[]>(`${this.baseUrl}/questions/quiz/${quizId}`, httpOptions);
-//   }
-// app/services/quiz.ts
+  // Update quiz
+  updateQuiz(id: number, quiz: any): Observable<Quiz> {
+    return this.http.put<Quiz>(`${this.baseUrl}/quizzes/${id}`, quiz);
+  }
 
-getQuestionsByQuiz(quizId: number): Observable<any[]> {
-  // Ensure httpOptions (withCredentials: true) is included here
-  return this.http.get<any[]>(`${this.baseUrl}/questions/quiz/${quizId}`, httpOptions);
-}
-  // Submit final answers for scoring
-  submitAnswers(quizId: number, userId: number, answers: string[]): Observable<any> {
-    // Added httpOptions here for secure submission
+  // Get questions by quiz
+  getQuestionsByQuiz(quizId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/questions/quiz/${quizId}`);
+  }
+
+  // Submit answers
+  submitAnswers(quizId: number, answers: string[]): Observable<any> {
     return this.http.post<any>(
-      `${this.baseUrl}/results/submit?quizId=${quizId}&userId=${userId}`, 
-      answers, 
-      httpOptions
+      `${this.baseUrl}/results/submit?quizId=${quizId}`,
+      answers
     );
   }
 
-  // Common error handler to debug CORS or Path issues
- private handleError(error: HttpErrorResponse) {
-    if (error.status === 0) {
-      console.error('Check if Backend is running and @CrossOrigin is added to Controller!');
-    } else {
-      console.error(`Backend returned code ${error.status}, body was: `, error.error);
-    }
-    return throwError(() => new Error('Something went wrong; please try again later.'));
+  // Get individual result
+  getResultById(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/results/${id}`);
+  }
+
+  // Get leaderboard
+  getLeaderboard(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/results/leaderboard`);
   }
 }

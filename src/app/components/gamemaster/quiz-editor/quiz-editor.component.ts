@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../../material.module';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'; // Ensure these are imported
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -13,25 +13,52 @@ import { FormsModule } from '@angular/forms';
 })
 export class QuizEditorComponent implements OnInit {
   quizTitle: string = '';
+  quizDescription: string = '';
   questionCount: number = 0;
 
-  constructor(
-    public dialogRef: MatDialogRef<QuizEditorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any // Injected data from Dashboard
-  ) {}
+  questionsList: any[] = [];
 
-  ngOnInit() {
-    if (this.data) {
-      this.quizTitle = this.data.title;
-      this.questionCount = this.data.questions;
+  newQuestion = {
+    questionText: '',
+    optionA: '',
+    optionB: '',
+    optionC: '',
+    optionD: '',
+    correctAnswer: ''
+  };
+
+  addQuestionToList() {
+    if (this.newQuestion.questionText && this.newQuestion.correctAnswer) {
+      this.questionsList.push({ ...this.newQuestion });
+      // Reset the form for the next question
+      this.newQuestion = { questionText: '', optionA: '', optionB: '', optionC: '', optionD: '', correctAnswer: '' };
     }
   }
 
-  onSave() {
-    // Return the new data to the dashboard
-    this.dialogRef.close({
-      title: this.quizTitle,
-      questions: this.questionCount
-    });
+  removeQuestion(index: number) {
+    this.questionsList.splice(index, 1);
   }
+  constructor(
+    public dialogRef: MatDialogRef<QuizEditorComponent>, // Fixes Property 'dialogRef' error
+    @Inject(MAT_DIALOG_DATA) public data: any           // Fixes Property 'data' error
+  ) {}
+
+ngOnInit() {
+  if (this.data) {
+    this.quizTitle = this.data.title;
+    this.quizDescription = this.data.description || '';
+    // Load existing questions so they aren't lost on save
+    this.questionsList = this.data.questionsList || []; 
+    this.questionCount = this.questionsList.length; 
+  }
+}
+onSave() {
+  const quizData = {
+    title: this.quizTitle,
+    description: this.quizDescription,
+    questionCount: this.questionsList.length, 
+    questionsList: this.questionsList        
+  };
+  this.dialogRef.close(quizData);
+}
 }

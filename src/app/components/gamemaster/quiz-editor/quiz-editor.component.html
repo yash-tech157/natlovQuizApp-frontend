@@ -6,12 +6,49 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Number of Questions</mat-label>
-    <input matInput type="number" [(ngModel)]="questionCount">
+    <mat-label>Description</mat-label>
+    <textarea matInput [(ngModel)]="quizDescription" placeholder="Enter quiz description"></textarea>
   </mat-form-field>
-  
-  </mat-dialog-content>
+
+  <hr>
+  <h3>Add Questions</h3>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Question Text</mat-label>
+    <input matInput [(ngModel)]="newQuestion.questionText" placeholder="What is JVM?">
+  </mat-form-field>
+
+  <div class="options-grid">
+    <mat-form-field appearance="outline"><mat-label>Option A</mat-label><input matInput [(ngModel)]="newQuestion.optionA"></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Option B</mat-label><input matInput [(ngModel)]="newQuestion.optionB"></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Option C</mat-label><input matInput [(ngModel)]="newQuestion.optionC"></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Option D</mat-label><input matInput [(ngModel)]="newQuestion.optionD"></mat-form-field>
+  </div>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Correct Answer (A/B/C/D)</mat-label>
+    <input matInput [(ngModel)]="newQuestion.correctAnswer" placeholder="e.g. A">
+  </mat-form-field>
+
+  <button mat-stroked-button color="primary" type="button" (click)="addQuestionToList()">
+    Add Question to List
+  </button>
+
+  <div *ngIf="questionsList.length > 0" class="added-questions-list">
+    <h4>Questions in this Quiz ({{ questionsList.length }}):</h4>
+    <ul>
+      <li *ngFor="let q of questionsList; let i = index">
+        {{ i + 1 }}. {{ q.questionText }} 
+        <button mat-icon-button color="warn" (click)="removeQuestion(i)"><mat-icon>delete</mat-icon></button>
+      </li>
+    </ul>
+  </div>
+
+</mat-dialog-content>
+
 <mat-dialog-actions align="end">
   <button mat-button (click)="dialogRef.close()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!quizTitle">Save Quiz</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!quizTitle || questionsList.length === 0">
+    Save Entire Quiz
+  </button>
 </mat-dialog-actions>
