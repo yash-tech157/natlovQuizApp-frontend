@@ -1,13 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service'; // Adjust the path as necessary
+import { MatCardModule  } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-login-success',
-  standalone: true, // Assuming standalone based on your project structure
+  standalone: true,
+  imports: [
+    MatCardModule,
+    MatProgressSpinnerModule
+  ],
   templateUrl: './login-success.component.html',
   styleUrls: ['./login-success.component.scss']
 })
+
 export class LoginSuccessComponent implements OnInit {
 
 constructor(

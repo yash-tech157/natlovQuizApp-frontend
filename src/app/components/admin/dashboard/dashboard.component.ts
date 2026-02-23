@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit {
 
   playerCount: number = 0;
   ngOnInit(): void {
-  this.loadQuizzes(); // This calls the QuizService
+  this.loadQuizzes(); //  calls the QuizService
   this.loadStats();
 }
 
@@ -53,13 +53,13 @@ openQuizEditor(quiz?: Quiz): void {
     if (!result) return;
 
     if (quiz && quiz.id) {
-      // FIX: If we have an ID, call UPDATE
+      //  If we have an ID, call UPDATE
       this.quizService.updateQuiz(quiz.id, result).subscribe({
         next: () => this.loadQuizzes(),
         error: (err) => console.error('Error updating quiz', err),
       });
     } else {
-      // FIX: If no ID, call CREATE
+      //  If no ID, call CREATE
       this.quizService.createQuiz(result).subscribe({
         next: () => this.loadQuizzes(),
         error: (err) => console.error('Error creating quiz', err),

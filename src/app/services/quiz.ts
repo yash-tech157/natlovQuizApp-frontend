@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Quiz {
   id: number;
@@ -25,7 +26,8 @@ export interface Question {
 })
 export class QuizService {
 
-  private baseUrl = 'http://localhost:8080/api';
+  // private baseUrl = 'http://localhost:8080/api';
+  private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -75,4 +77,8 @@ export class QuizService {
   getPlayerCount(): Observable<number> {
     return this.http.get<number>(`${this.baseUrl}/admin/stats/players/count`);
   }
+
+getMyResults(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.baseUrl}/results/me`);
+}
 }

@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../../material.module'; 
 import { AuthService } from '../../services/auth.service';
 // import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -23,7 +24,7 @@ export class NavbarComponent {
 
   onLogout() {
     localStorage.removeItem('token'); // Clear the JWT locally
-    window.location.href = 'http://localhost:8080/logout';
+    window.location.href = `${environment.authUrl}/logout`;
   }
 
 }
